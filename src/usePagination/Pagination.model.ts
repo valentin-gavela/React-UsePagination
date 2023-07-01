@@ -1,7 +1,7 @@
 export class PaginationModel {
   limit: number;
   total: number;
-  updateFn: (x: any) => void;
+  updateFn: (instance: any) => void;
   private page: number;
 
   constructor({ limit, total, initialPage = 0, updateFn }: Params) {
@@ -53,5 +53,5 @@ type Params = {
   total: number;
   /** Initial page  */
   initialPage?: number;
-  updateFn: (x: any) => void;
+  updateFn: (instance: PaginationModel) => void;
 };

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import { PaginationModel } from './Pagination.model';
 
 export const usePagination = ({ limit, total, initialPage = 1 }: Props) => {
