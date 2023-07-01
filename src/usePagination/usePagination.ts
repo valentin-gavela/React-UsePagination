@@ -1,28 +1,32 @@
 import { useState } from 'react';
-import { PaginationModel } from './Pagination.model';
+import { PaginationWithUpdate } from './Pagination.model';
 
+/** In the hook, we just need to 'subscribe' an updateFn
+ * to generate a rerender when the page is updated */
 export const usePagination = ({ limit, total, initialPage = 1 }: Props) => {
-  const updateFn = (instance: PaginationModel) => {
-    setPagination(
-      new PaginationModel({
-        limit,
-        total,
-        initialPage: instance.activePage,
-        updateFn,
-      })
-    );
+  const update = useForceUpdate();
+
+  const updateFn = () => {
+    update();
   };
 
-  const [pagination, setPagination] = useState(
-    new PaginationModel({
-      limit,
-      total,
-      initialPage,
-      updateFn,
-    })
-  );
+  const paginationInstance = new PaginationWithUpdate({
+    limit,
+    total,
+    initialPage,
+  });
+
+  paginationInstance.setUpdateFn(updateFn);
+
+  const [pagination] = useState(paginationInstance);
 
   return pagination;
+};
+
+const useForceUpdate = () => {
+  const [, setUpdate] = useState(true);
+
+  return () => setUpdate((s) => !s);
 };
 
 type Props = { limit: number; total: number; initialPage?: number };

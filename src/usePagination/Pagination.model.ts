@@ -1,15 +1,13 @@
 export class PaginationModel {
   limit: number;
   total: number;
-  updateFn: (instance: any) => void;
   private page: number;
 
-  constructor({ limit, total, initialPage = 0, updateFn }: Params) {
+  constructor({ limit, total, initialPage = 0 }: Params) {
     this.limit = limit;
     this.total = total;
     this.page = initialPage;
     this.setPage = this.setPage.bind(this);
-    this.updateFn = updateFn;
   }
 
   get pages() {
@@ -28,7 +26,7 @@ export class PaginationModel {
     if (page < 1 || page > this.total) return;
 
     this.page = page;
-    this.updateFn(this);
+    // this.updateFn(this);
   }
 
   next() {
@@ -53,5 +51,25 @@ type Params = {
   total: number;
   /** Initial page  */
   initialPage?: number;
-  updateFn: (instance: PaginationModel) => void;
 };
+
+/**
+ * To implement PaginationModel in a React hook, we can register
+ * an updateFn to force a state update when the method setPage is called.
+ */
+export class PaginationWithUpdate extends PaginationModel {
+  private updateFn: (instance: any) => void;
+
+  constructor(params: Params) {
+    super(params);
+  }
+
+  override setPage(page: number) {
+    super.setPage(page);
+    this.updateFn(this);
+  }
+
+  setUpdateFn(updateFn: (instance: PaginationModel) => void) {
+    this.updateFn = updateFn;
+  }
+}
