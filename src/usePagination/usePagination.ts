@@ -1,3 +1,4 @@
+import React = require('react');
 import { useState } from 'react';
 import { PaginationWithUpdate } from './Pagination.model';
 
@@ -10,13 +11,17 @@ export const usePagination = ({ limit, total, initialPage = 1 }: Props) => {
     update();
   };
 
-  const paginationInstance = new PaginationWithUpdate({
-    limit,
-    total,
-    initialPage,
-  });
+  const paginationInstance = React.useMemo(() => {
+    const instance = new PaginationWithUpdate({
+      limit,
+      total,
+      initialPage,
+    });
 
-  paginationInstance.setUpdateFn(updateFn);
+    instance.setUpdateFn(updateFn);
+
+    return instance;
+  }, []);
 
   const [pagination] = useState(paginationInstance);
 

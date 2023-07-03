@@ -1,11 +1,11 @@
 export class PaginationModel {
-  limit: number;
-  total: number;
+  itemsPerPage: number;
+  totalItems: number;
   private page: number;
 
   constructor({ limit, total, initialPage = 0 }: Params) {
-    this.limit = limit;
-    this.total = total;
+    this.itemsPerPage = limit;
+    this.totalItems = total;
     this.page = initialPage;
     this.setPage = this.setPage.bind(this);
   }
@@ -15,7 +15,7 @@ export class PaginationModel {
   }
 
   get pagesAmount() {
-    return Math.ceil(this.total / this.limit);
+    return Math.ceil(this.totalItems / this.itemsPerPage);
   }
 
   get activePage() {
@@ -23,14 +23,13 @@ export class PaginationModel {
   }
 
   setPage(page: number) {
-    if (page < 1 || page > this.total) return;
+    if (page < 1 || page > this.totalItems) return;
 
     this.page = page;
-    // this.updateFn(this);
   }
 
   next() {
-    if (this.activePage === this.total) return;
+    if (this.activePage === this.totalItems) return;
 
     const nextPage = this.page + 1;
     this.setPage(nextPage);
